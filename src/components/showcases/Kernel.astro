@@ -40,15 +40,15 @@ const nets = [
     position: absolute;
     inset: 0;
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
     align-items: center;
     gap: 5%;
     padding: 6%;
     background: radial-gradient(80% 80% at 80% 50%, #0b1a14, #050607 70%);
-    font: 0.66rem/1.65 var(--font-mono, monospace);
+    font: 0.62em/1.7 var(--font-mono, monospace);
     color: #a1a1aa;
   }
-  .ln { white-space: nowrap; overflow: hidden; opacity: 0; transform: translateX(-6px); }
+  .ln { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: 0; transform: translateX(-6px); }
   .ln span { display: inline-block; width: 1em; }
   .ok span { color: #34d399; }
   .err { color: #f87171; }

@@ -91,7 +91,7 @@ export const projects: Project[] = [
     kicker: "Ecommerce · en colaboración",
     desc: "TODO: Tienda online con catálogo, carrito y checkout.",
     tags: ["TODO"],
-    links: [{ href: "https://khorven-presentation.vercel.app", label: "Ver presentación" }],
+    links: [], // TODO: link a la tienda
     items: ["Remera", "Buzo", "Gorra"],
   },
   {
@@ -100,6 +100,16 @@ export const projects: Project[] = [
     kicker: "En colaboración",
     desc: "TODO: Panel con métricas, gráficos y filtros para seguir el rendimiento del negocio.",
     tags: ["TODO"],
+    links: [],
+  },
+  {
+    variant: "qr",
+    title: "Timbre con QR conectado al teléfono",
+    kicker: "Funcionando en casa",
+    tagline: "Un timbre sin cables: el visitante escanea un QR y suena en el celular.",
+    desc: "TODO: El visitante escanea un QR en la puerta y el aviso llega al teléfono al instante. Una webapp muestra quién tocó y el historial de visitas.",
+    highlights: ["TODO: cómo viaja el aviso del QR al teléfono (push, WebSocket, etc.)."],
+    tags: ["PWA", "Notificaciones push", "JavaScript"],
     links: [],
   },
   {

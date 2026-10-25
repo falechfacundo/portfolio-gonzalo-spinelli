@@ -40,26 +40,26 @@ const slots = [
     padding: 6% 7%;
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.8em;
     background: linear-gradient(160deg, #f3f1ea, #e6ebe3);
     color: #3f4a3c;
   }
-  .head { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 600; }
-  .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #7c9a76; }
+  .head { display: flex; align-items: center; gap: 0.5em; font-size: 0.78em; font-weight: 600; }
+  .dot { width: 0.5em; height: 0.5em; border-radius: 50%; background: #7c9a76; }
   .grid {
     flex: 1;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: auto repeat(4, 1fr);
-    gap: 0.35rem;
+    gap: 0.35em;
   }
-  .day { grid-row: 1; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; }
-  .slot { border-radius: 0.5rem; background: rgba(124, 154, 118, 0.08); }
+  .day { grid-row: 1; font-size: 0.65em; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.6; }
+  .slot { border-radius: 0.5em; background: rgba(124, 154, 118, 0.08); }
   .appt {
     z-index: 1;
-    border-radius: 0.55rem;
-    padding: 0.35rem 0.45rem;
-    font-size: 0.6rem;
+    border-radius: 0.55em;
+    padding: 0.35em 0.45em;
+    font-size: 0.6em;
     font-weight: 500;
     background: #fff;
     border-left: 3px solid #7c9a76;
@@ -72,7 +72,7 @@ const slots = [
   :global(.is-on) .appt {
     animation: settle 1.1s calc(0.3s + var(--i) * 0.28s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
-  .lock { margin-left: auto; font: 500 0.6rem/1 var(--font-mono, monospace); opacity: 0.6; }
+  .lock { margin-left: auto; font: 500 0.6em/1 var(--font-mono, monospace); opacity: 0.6; }
   .appt { display: grid; }
   .enc, .dec { grid-area: 1 / 1; }
   .enc { font-family: var(--font-mono, monospace); opacity: 0.55; }

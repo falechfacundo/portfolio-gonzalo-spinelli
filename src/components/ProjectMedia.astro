@@ -27,5 +27,11 @@ const Showcase = map[p.variant];
 ---
 
 <div class="showcase relative aspect-[16/10] h-full w-full overflow-hidden rounded-[1.2rem] ring-1 ring-line">
-  <Showcase p={p} />
+  <div class="sc-root"><Showcase p={p} /></div>
 </div>
+
+<style>
+  /* todo el contenido de los showcases usa em: escala con el ancho del marco */
+  .showcase { container-type: inline-size; }
+  .sc-root { position: absolute; inset: 0; font-size: clamp(15px, 3.4cqw, 24px); }
+</style>

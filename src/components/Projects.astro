@@ -31,7 +31,7 @@ const items = projects.map((p, i) => ({
       <div>
         {
           items.map(({ i, n, lives, repos, ...p }) => (
-            <article data-case={i} class="case py-10 first:pt-0 lg:flex lg:min-h-[78vh] lg:flex-col lg:justify-center lg:py-16">
+            <article data-case={i} class="case py-10 first:pt-0 lg:flex lg:min-h-[min(78vh,52rem)] lg:portrait:min-h-0 lg:flex-col lg:justify-center lg:py-16">
               <div class="spot noise glass mb-8 rounded-[1.6rem] p-2 lg:hidden" data-case-mobile>
                 <Media p={p} />
               </div>
