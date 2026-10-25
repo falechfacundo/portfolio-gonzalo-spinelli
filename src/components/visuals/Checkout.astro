@@ -1,0 +1,42 @@
+---
+// Checkout.astro — el flujo de compra avanza con el scroll: producto → carrito → pago → confirmado
+const steps = ["Producto", "Carrito", "Pago", "Confirmado"];
+---
+
+<div class="co">
+  <ol class="steps">
+    {steps.map((s, i) => <li style={`--a:${i * 0.25}`}><span class="n">{i + 1}</span>{s}</li>)}
+    <span class="track"><span class="fill"></span></span>
+  </ol>
+
+  <div class="panels">
+    <div class="pn" style="--a:0"><div class="thumb"></div><strong>Buzo oversize</strong><span>$42.000</span><button>Agregar al carrito</button></div>
+    <div class="pn" style="--a:.25"><div class="row"><div class="thumb sm"></div><span>Buzo oversize × 1</span><b>$42.000</b></div><div class="row tot"><span>Total</span><b>$42.000</b></div></div>
+    <div class="pn" style="--a:.5"><div class="cardnum">•••• •••• •••• 4242</div><button>Pagar $42.000</button></div>
+    <div class="pn done" style="--a:.75"><span class="check">✓</span><strong>Pedido confirmado</strong><span>#KH-10294</span></div>
+  </div>
+</div>
+
+<style>
+  .co { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 1.6em; padding: 1.8em; background: var(--color-soft); }
+  .steps { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); margin: 0; padding: 0; list-style: none; font-size: 0.7em; }
+  .steps li { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 0.6em; color: var(--color-mute); }
+  .n { display: grid; place-items: center; width: 2.2em; height: 2.2em; border-radius: 50%; background: #fff; border: 1px solid var(--color-rule); font: 600 0.9em var(--font-mono); }
+  .steps li { --on: clamp(0, (var(--p) - var(--a)) * 20, 1); color: color-mix(in srgb, var(--color-ink) calc(var(--on) * 100%), var(--color-mute)); }
+  .steps li .n { background: color-mix(in srgb, var(--color-ink) calc(var(--on) * 100%), #fff); color: color-mix(in srgb, #fff calc(var(--on) * 100%), var(--color-ink)); }
+  .track { position: absolute; left: 12.5%; right: 12.5%; top: 1.1em; height: 1px; background: var(--color-rule); }
+  .fill { display: block; height: 100%; width: calc(clamp(0, var(--p) / 0.75, 1) * 100%); background: var(--color-ink); }
+
+  .panels { flex: 1; display: grid; }
+  .pn { grid-area: 1 / 1; align-self: center; justify-self: center; width: min(100%, 18em); display: flex; flex-direction: column; gap: 0.7em; padding: 1.4em; border-radius: 1em; background: #fff; box-shadow: 0 1.4em 3em -2em rgba(0, 0, 0, 0.3); font-size: 0.8em;
+    --vis: calc(clamp(0, (var(--p) - var(--a)) * 20, 1) - clamp(0, (var(--p) - var(--a) - 0.25) * 20, 1));
+    opacity: var(--vis); transform: translateY(calc((1 - var(--vis)) * 1em)); }
+  .pn.done { --vis: clamp(0, (var(--p) - 0.75) * 20, 1); align-items: center; text-align: center; }
+  .thumb { aspect-ratio: 16 / 10; border-radius: 0.6em; background: linear-gradient(135deg, #d2d2d7, #a1a1a6); }
+  .thumb.sm { width: 2.6em; aspect-ratio: 1; }
+  .pn button { height: 2.6em; border-radius: 99px; background: var(--color-ink); color: #fff; font: inherit; font-size: 0.9em; }
+  .row { display: flex; align-items: center; gap: 0.8em; justify-content: space-between; }
+  .tot { border-top: 1px solid var(--color-rule); padding-top: 0.7em; }
+  .cardnum { padding: 1em; border-radius: 0.6em; background: #0a0a0a; color: #fff; font-family: var(--font-mono); }
+  .check { display: grid; place-items: center; width: 2.6em; height: 2.6em; border-radius: 50%; background: var(--color-signal); color: #fff; font-size: 1.2em; }
+</style>

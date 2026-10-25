@@ -1,0 +1,52 @@
+---
+// Index.astro — índice de proyectos tipo tabla; cada fila lleva a su capítulo
+import { projects } from "../data/portfolio";
+---
+
+<section id="index" data-nav-label="Índice" class="py-28 sm:py-36">
+  <div class="wrap">
+    <div class="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+      <h2 class="headline max-w-3xl" data-reveal>Ocho proyectos.<br /><span class="text-mute">Cada uno, de punta a punta.</span></h2>
+      <p class="label" data-reveal>{String(projects.length).padStart(2, "0")} capítulos</p>
+    </div>
+
+    <div class="label hidden grid-cols-[4rem_1.2fr_1.3fr_13rem_2rem] gap-6 border-b border-ink pb-3 md:grid" data-reveal>
+      <span>N.º</span><span>Proyecto</span><span>Disciplina</span><span>Estado</span><span></span>
+    </div>
+    <ol>
+      {
+        projects.map((p, i) => (
+          <li data-reveal style={`--d:${i * 0.05}s`}>
+            <a href={`#chapter-${i + 1}`} class="row group grid grid-cols-[3rem_1fr_auto] items-center gap-x-6 gap-y-1 border-b border-rule py-6 md:grid-cols-[4rem_1.2fr_1.3fr_13rem_2rem]">
+              <span class="font-mono text-sm text-faint">{String(i + 1).padStart(2, "0")}</span>
+              <span class="text-[clamp(1.4rem,2.4vw,2.2rem)] font-semibold tracking-[-0.03em] transition-transform duration-500 group-hover:translate-x-2">{p.name}</span>
+              <span class="col-start-2 text-sm text-mute md:col-start-auto md:text-base">{p.discipline}</span>
+              <span class="label col-start-2 row-start-3 flex items-center gap-2 whitespace-nowrap md:col-start-auto md:row-start-auto">
+                <span class={`h-1.5 w-1.5 rounded-full ${p.status.startsWith("En desarrollo") || p.status === "TODO" ? "bg-faint" : "bg-signal"}`} />
+                {p.status}
+              </span>
+              <span class="col-start-3 row-start-1 text-xl transition-transform duration-500 group-hover:translate-x-1 md:col-start-auto md:row-start-auto">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  .row { position: relative; }
+  .row::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 1px;
+    width: 100%;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.7s var(--ease-out-expo);
+  }
+  .row:hover::after { transform: scaleX(1); }
+</style>

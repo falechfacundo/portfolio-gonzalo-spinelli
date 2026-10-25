@@ -1,0 +1,68 @@
+---
+// Recommender.astro — un campo de puntos (el dataset) se filtra a medida que los sliders
+// se mueven con el scroll, hasta quedar los tres mejores
+const COLS = 32, ROWS = 15;
+// pseudoaleatorio determinístico para que SSR y cliente coincidan
+let seed = 7;
+const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+const winners = new Set([7 * COLS + 9, 4 * COLS + 21, 10 * COLS + 26]);
+const dots = Array.from({ length: COLS * ROWS }, (_, i) => (winners.has(i) ? 2 : rnd()));
+const sliders = [
+  { l: "Antojo", v: "Pizza", from: 15, to: 72 },
+  { l: "Hambre", v: "Mucha", from: 25, to: 88 },
+  { l: "Presupuesto", v: "$6.000", from: 80, to: 38 },
+];
+const results = [
+  { n: "Grande muzza + 2 empanadas", s: "9.4" },
+  { n: "Pizza mitad y mitad", s: "8.8" },
+  { n: "Combo burger doble", s: "8.1" },
+];
+---
+
+<div class="rc">
+  <div class="field" style={`--cols:${COLS}`}>
+    {dots.map((r) => <i class={r === 2 ? "win" : ""} style={`--r:${r === 2 ? 2 : r.toFixed(3)}`} />)}
+  </div>
+
+  <div class="side">
+    {
+      sliders.map((s, i) => (
+        <div class="sl" style={`--from:${s.from}%;--to:${s.to}%;--a:${i * 0.18}`}>
+          <div class="top"><span>{s.l}</span><b>{s.v}</b></div>
+          <div class="track"><span class="fill" /></div>
+        </div>
+      ))
+    }
+    <div class="counter"><span class="big">25.000</span><span class="big three">3</span><span class="lab">opciones</span></div>
+  </div>
+
+  <ol class="rank">
+    {results.map((r, i) => <li style={`--a:${0.76 + i * 0.04}`}><span>{String(i + 1).padStart(2, "0")}</span>{r.n}<b>{r.s}</b></li>)}
+  </ol>
+</div>
+
+<style>
+  .rc { position: absolute; inset: 0; display: grid; grid-template-columns: 1.5fr 1fr; grid-template-rows: 1fr auto; gap: 1.4em; padding: 1.6em; background: #fff; }
+  .field { align-self: center; display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: 0.35em; transition: opacity 0.3s; }
+  .field i { aspect-ratio: 1; border-radius: 50%; background: var(--color-ink);
+    /* el umbral sube con el scroll: los puntos con --r menor se apagan */
+    opacity: clamp(0.06, (var(--r) - clamp(0, var(--p) * 1.25, 1)) * 30, 1); }
+  .field i.win { background: var(--color-signal); transform: scale(calc(1 + clamp(0, (var(--p) - 0.75) * 6, 1) * 0.8)); }
+
+  .side { display: flex; flex-direction: column; justify-content: center; gap: 1.1em; font-size: 0.72em; }
+  .top { display: flex; justify-content: space-between; margin-bottom: 0.45em; color: var(--color-mute); }
+  .top b { color: var(--color-ink); font-weight: 600; }
+  .track { height: 3px; border-radius: 99px; background: var(--color-rule); }
+  .fill { display: block; height: 100%; border-radius: inherit; background: var(--color-ink);
+    width: calc(var(--from) + (var(--to) - var(--from)) * clamp(0, (var(--p) - var(--a)) / 0.4, 1)); }
+  .counter { display: grid; margin-top: 0.6em; }
+  .big { grid-area: 1 / 1; font-size: 2.6em; font-weight: 600; letter-spacing: -0.04em; line-height: 1; opacity: calc(1 - clamp(0, (var(--p) - 0.72) * 10, 1)); }
+  .big.three { color: var(--color-signal); opacity: clamp(0, (var(--p) - 0.75) * 10, 1); }
+  .counter .lab { font: 0.85em var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-mute); margin-top: 0.4em; }
+
+  .rank { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6em; margin: 0; padding: 0; list-style: none; font-size: 0.66em; }
+  .rank li { display: flex; gap: 0.6em; align-items: center; padding: 0.8em 0.9em; border-radius: 0.7em; background: var(--color-soft);
+    opacity: clamp(0, (var(--p) - var(--a)) * 10, 1); transform: translateY(calc((1 - clamp(0, (var(--p) - var(--a)) * 10, 1)) * 0.8em)); }
+  .rank li span { font-family: var(--font-mono); color: var(--color-faint); }
+  .rank li b { margin-left: auto; font-family: var(--font-mono); color: var(--color-signal); }
+</style>

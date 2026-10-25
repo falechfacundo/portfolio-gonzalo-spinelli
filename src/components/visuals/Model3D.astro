@@ -1,0 +1,88 @@
+---
+// Model3D.astro — pipeline en 4 etapas guiado por scroll: foto → malla → textura → en el juego,
+// y al final el volcado hex con el byte que dejaba el modelo negro
+import type { Project } from "../../data/portfolio";
+
+interface Props {
+  p: Project;
+}
+const { p } = Astro.props;
+const stages = ["Foto", "Malla", "Textura", "En el juego"];
+const hex = ["4D 54 52 4C", "00 00 80 3F", "00 00 00 00", "FF FF FF FF"];
+---
+
+<div class="m3d">
+  <ol class="stages">
+    {stages.map((s, i) => <li style={`--a:${i * 0.22}`}><span>{String(i + 1).padStart(2, "0")}</span> {s}</li>)}
+  </ol>
+
+  <div class="center">
+    <div class="photo"><span></span></div>
+    {
+      p.model ? (
+        <model-viewer src={p.model} alt={p.name} interaction-prompt="none" disable-zoom loading="lazy" class="viewer" data-scroll-orbit />
+      ) : (
+        <div class="scene">
+          <div class="cube">{["f", "b", "l", "r", "t", "d"].map((s) => <span class={`face ${s}`} />)}</div>
+        </div>
+      )
+    }
+    <div class="ingame">BOSS · <b>JorgeM</b></div>
+  </div>
+
+  <div class="hex">
+    <span class="addr">0x0004A2F0</span>
+    {hex.map((h, i) => <span class={i === 2 ? "bad" : ""}>{i === 2 ? <><i class="was">00 00 00 00</i><i class="now">FF FF FF FF</i></> : h}</span>)}
+  </div>
+</div>
+
+{p.model && <script is:inline type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>}
+<script>
+  // con un .glb real, el scroll rota la cámara del modelo
+  document.querySelectorAll<HTMLElement>("[data-scroll-orbit]").forEach((v) => {
+    const sec = v.closest<HTMLElement>("[data-scrub]")!;
+    const tick = () => {
+      const p = parseFloat(getComputedStyle(sec).getPropertyValue("--p")) || 0;
+      v.setAttribute("camera-orbit", `${-30 + p * 300}deg 78deg auto`);
+    };
+    addEventListener("scroll", () => requestAnimationFrame(tick), { passive: true });
+    tick();
+  });
+</script>
+
+<style>
+  .m3d {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 70% at 50% 55%, #1a1712, #050505 70%);
+    color: #e7e2d6;
+    --gold: #d9b26a;
+  }
+  .stages { position: absolute; top: 1.4em; left: 1.6em; right: 1.6em; display: flex; justify-content: space-between; margin: 0; padding: 0; list-style: none; font: 0.62em var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stages li { opacity: calc(0.25 + 0.75 * clamp(0, (var(--p) - var(--a)) * 8, 1)); }
+  .stages span { color: var(--gold); }
+
+  .center { position: absolute; inset: 16% 0 22%; display: grid; place-items: center; }
+  .center > * { grid-area: 1 / 1; }
+  /* etapa 1: retrato que se desvanece */
+  .photo { width: 30%; aspect-ratio: 3 / 4; border-radius: 0.6em; background: linear-gradient(#3a342a, #1d1a15); display: grid; place-items: end center; overflow: hidden; opacity: calc(1 - clamp(0, (var(--p) - 0.12) * 8, 1)); transform: scale(calc(1 - var(--p) * 0.4)); }
+  .photo span { width: 70%; aspect-ratio: 1; margin-bottom: -18%; border-radius: 50% 50% 0 0; background: #6b604d; box-shadow: 0 -4.6em 0 -1.1em #6b604d; }
+
+  .scene { perspective: 900px; opacity: clamp(0, (var(--p) - 0.12) * 8, 1); }
+  .cube { width: 8em; height: 8em; position: relative; transform-style: preserve-3d; transform: rotateX(-16deg) rotateY(calc(var(--p) * 540deg)); }
+  .face { position: absolute; inset: 0; border: 1px solid var(--gold); background: rgba(217, 178, 106, calc(clamp(0, (var(--p) - 0.4) * 4, 1) * 0.55)); }
+  .f { transform: translateZ(4em); } .b { transform: rotateY(180deg) translateZ(4em); }
+  .l { transform: rotateY(-90deg) translateZ(4em); } .r { transform: rotateY(90deg) translateZ(4em); }
+  .t { transform: rotateX(90deg) translateZ(4em); } .d { transform: rotateX(-90deg) translateZ(4em); }
+  .viewer { width: 100%; height: 100%; opacity: clamp(0, (var(--p) - 0.12) * 8, 1); }
+
+  .ingame { align-self: end; font: 600 0.75em var(--font-mono); letter-spacing: 0.16em; padding: 0.5em 1em; border: 1px solid var(--gold); color: var(--gold); opacity: clamp(0, (var(--p) - 0.62) * 8, 1); transform: translateY(calc((1 - clamp(0, (var(--p) - 0.62) * 8, 1)) * 1em)); }
+  .ingame b { color: #fff; }
+
+  .hex { position: absolute; left: 1.6em; right: 1.6em; bottom: 1.4em; display: flex; flex-wrap: wrap; gap: 0.4em 1.2em; font: 0.66em var(--font-mono); color: #8e8e93; opacity: clamp(0, (var(--p) - 0.72) * 8, 1); }
+  .addr { color: #5a5a5f; }
+  .bad { display: inline-grid; }
+  .bad i { grid-area: 1 / 1; font-style: normal; }
+  .was { color: #ff453a; opacity: calc(1 - clamp(0, (var(--p) - 0.86) * 12, 1)); }
+  .now { color: #30d158; opacity: clamp(0, (var(--p) - 0.86) * 12, 1); }
+</style>

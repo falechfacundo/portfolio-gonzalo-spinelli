@@ -1,0 +1,37 @@
+---
+// Stats.astro — cifras grandes que cuentan al entrar en pantalla
+import { stats, wip } from "../data/portfolio";
+const fmt = (n: number) => n.toLocaleString("es-AR");
+---
+
+<section data-nav-label="Cifras" class="py-28 sm:py-36">
+  <div class="wrap">
+    <p class="label mb-12" data-reveal>En números</p>
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-14 lg:grid-cols-4">
+      {
+        stats.map((s, i) => (
+          <div class="border-t border-ink pt-6" data-reveal style={`--d:${i * 0.08}s`}>
+            <dt class="display text-[clamp(3rem,7vw,6.5rem)] tabular-nums">
+              <span data-count-to={s.n}>{fmt(s.n)}</span>{s.suffix}
+            </dt>
+            <dd class="mt-3 max-w-[14rem] text-mute">{s.label}</dd>
+          </div>
+        ))
+      }
+    </dl>
+
+    {
+      wip.length > 0 && (
+        <div class="mt-28 grid gap-6 border-t border-rule pt-10 md:grid-cols-[14rem_1fr]" data-reveal>
+          <p class="label">También en curso</p>
+          {wip.map((w) => (
+            <div>
+              <h3 class="text-2xl font-semibold tracking-tight">{w.title}</h3>
+              <p class="mt-2 max-w-2xl text-mute">{w.desc}</p>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</section>

@@ -1,70 +1,49 @@
 ---
-// Hero.astro — sin foto: el nombre es protagonista y una terminal "escribe" el prompt
+// Hero.astro — titular gigante; al scrollear las líneas se separan hacia los costados
 import { site } from "../data/portfolio";
-import SocialLinks from "./SocialLinks.astro";
 
-const [first, ...rest] = site.name.split(" ");
-const prompt = "make && ./ship --a-produccion";
+const lines = [
+  { t: "Construyo", dir: -1 },
+  { t: "lo que parece", dir: 1 },
+  { t: "imposible.", dir: -1, accent: true },
+];
 ---
 
-<section id="home" data-pause-offscreen class="relative overflow-hidden pb-24 pt-[9rem] sm:pt-[11rem]">
-  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-    <div class="hairline-grid absolute inset-0 opacity-70 [mask-image:radial-gradient(70%_60%_at_50%_0%,#000_20%,transparent_75%)]"></div>
-    <div class="absolute left-1/2 top-[-18%] h-[70vmin] w-[70vmin] -translate-x-1/2 rounded-full bg-accent/30 blur-[120px]" style="animation:drift 14s ease-in-out infinite"></div>
-    <div class="absolute right-[-10%] top-[8%] h-[40vmin] w-[40vmin] rounded-full bg-fuchsia-500/10 blur-[110px]" style="animation:drift 18s ease-in-out infinite reverse"></div>
+<section id="top" data-scrub="exit" data-nav-label="Inicio" class="hero relative flex min-h-[100svh] flex-col justify-between overflow-hidden pb-10 pt-28">
+  <div class="wrap flex items-start justify-between gap-6">
+    <p class="label" data-reveal>Ingeniería · Seguridad · IA · Producto</p>
+    <p class="label hidden text-right sm:block" data-reveal style="--d:.1s">Buenos Aires, AR<br />Disponible para proyectos</p>
   </div>
 
-  <div class="wrap relative text-center">
-    <span data-hero-in class="eyebrow">{site.role}</span>
+  <h1 class="wrap display text-[clamp(3.4rem,11.5vw,12.5rem)]" aria-label="Construyo lo que parece imposible.">
+    {
+      lines.map((l, i) => (
+        <span class="line block overflow-hidden" style={`--dir:${l.dir}`} aria-hidden="true">
+          <span class={`inner block ${l.accent ? "text-mute" : ""}`} style={`--d:${0.08 * i}s`}>{l.t}</span>
+        </span>
+      ))
+    }
+  </h1>
 
-    <h1 class="h-display h-hero mt-6" aria-label={site.name}>
-      <span class="split-line" aria-hidden="true"><span class="grad-text">{first}</span></span>
-      <span class="split-line" aria-hidden="true"><span class="grad-accent" style="-webkit-text-fill-color:transparent">{rest.join(" ")}</span></span>
-    </h1>
-
-    <div data-hero-in class="glass mx-auto mt-10 max-w-xl rounded-2xl p-4 text-left font-mono text-[0.85rem] sm:p-5">
-      <div class="mb-3 flex gap-1.5" aria-hidden="true">
-        <span class="h-2.5 w-2.5 rounded-full bg-red-400/70"></span>
-        <span class="h-2.5 w-2.5 rounded-full bg-yellow-400/70"></span>
-        <span class="h-2.5 w-2.5 rounded-full bg-green-400/70"></span>
-      </div>
-      <p class="text-fg-2">
-        <span class="text-ok">&gt;</span> <span data-type={prompt} aria-label={prompt}>{prompt}</span><span class="caret">▍</span>
-      </p>
-    </div>
-
-    <p data-hero-in class="lead mx-auto mt-8 max-w-[36rem]">
-      Construyo productos de principio a fin: del kernel de Linux a la criptografía en producción,
-      pasando por IA generativa 3D que corro en mi propio hardware.
+  <div class="wrap grid gap-8 border-t border-rule pt-6 md:grid-cols-[1fr_1.4fr_auto] md:items-end">
+    <p class="text-lg font-semibold tracking-tight" data-reveal>{site.name}</p>
+    <p class="lede max-w-xl" data-reveal style="--d:.1s">
+      Del kernel de Linux a la criptografía en producción, pasando por IA generativa 3D que corre en mi
+      propio hardware. De punta a punta, y terminado.
     </p>
-
-    <div data-hero-in class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-      <a href="#projects" data-magnetic class="btn btn-primary btn-lg">
-        Ver proyectos
-        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-      </a>
-      <a href="#contact" data-magnetic class="btn btn-ghost btn-lg">Hablemos</a>
-      <SocialLinks class="sm:ml-2" />
-    </div>
+    <a href="#index" class="label flex items-center gap-3 !text-ink" data-reveal style="--d:.2s">
+      Ver proyectos
+      <span class="cue grid h-9 w-9 place-items-center rounded-full border border-rule">↓</span>
+    </a>
   </div>
-  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-base"></div>
 </section>
 
-<script>
-  // escribe el prompt letra por letra; sin JS o con reduced motion queda el texto completo
-  const el = document.querySelector<HTMLElement>("[data-type]");
-  if (el && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    const text = el.dataset.type!;
-    el.textContent = "";
-    let i = 0;
-    setTimeout(function tick() {
-      el.textContent = text.slice(0, ++i);
-      if (i < text.length) setTimeout(tick, 35 + Math.random() * 60);
-    }, 1100);
-  }
-</script>
-
 <style>
-  .caret { animation: blink 1s step-end infinite; color: var(--color-accent-2); }
-  @keyframes blink { 50% { opacity: 0; } }
+  /* entrada: cada línea sube desde abajo de su máscara */
+  .js-motion .inner { transform: translateY(105%); }
+  .js-motion .is-in .inner { transform: none; transition: transform 1.3s var(--ease-out-expo) var(--d); }
+  /* salida con scroll: las líneas se abren hacia los costados */
+  .line { transform: translateX(calc(var(--dir) * var(--p, 0) * 22vw)); opacity: calc(1 - var(--p, 0) * 1.2); }
+  .cue { animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 50% { transform: translateY(4px); } }
 </style>

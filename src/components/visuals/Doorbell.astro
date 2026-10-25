@@ -1,0 +1,69 @@
+---
+// Doorbell.astro — el celular del visitante sube frente al QR, lo escanea, la señal viaja
+// y suena el teléfono de la casa
+const N = 21;
+const finder = (x: number, y: number) => {
+  for (const [ox, oy] of [[0, 0], [N - 7, 0], [0, N - 7]]) {
+    const dx = x - ox, dy = y - oy;
+    if (dx >= 0 && dx < 7 && dy >= 0 && dy < 7) {
+      const edge = dx === 0 || dx === 6 || dy === 0 || dy === 6;
+      const core = dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4;
+      return edge || core ? 1 : 0;
+    }
+  }
+  return -1;
+};
+const cells: string[] = [];
+for (let y = 0; y < N; y++)
+  for (let x = 0; x < N; x++) {
+    const f = finder(x, y);
+    if (f === -1 ? (x * 7 + y * 13 + x * y) % 5 < 2 : f === 1) cells.push(`M${x} ${y}h1v1h-1z`);
+  }
+---
+
+<div class="db2">
+  <div class="door">
+    <span class="lab">Puerta</span>
+    <div class="qrwrap">
+      <svg class="qr" viewBox={`-1 -1 ${N + 2} ${N + 2}`}><rect x="-1" y="-1" width={N + 2} height={N + 2} fill="#fff" /><path d={cells.join("")} fill="#0a0a0a" /></svg>
+      <span class="scan"></span>
+    </div>
+    <div class="visitor"><span class="cam"></span></div>
+  </div>
+
+  <div class="wire"><span class="sig"></span></div>
+
+  <div class="home">
+    <span class="lab">Tu teléfono</span>
+    <div class="phone">
+      <div class="notif"><b>🔔 Timbre</b><span>Alguien está en la puerta</span></div>
+      <div class="bell">🔔</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .db2 { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 0.6fr 1fr; align-items: center; padding: 1.8em; background: var(--color-soft); }
+  .lab { font: 0.6em var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-mute); }
+  .door, .home { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.9em; }
+  .qrwrap { position: relative; width: 70%; padding: 0.6em; border-radius: 0.8em; background: #fff; box-shadow: 0 1.2em 2.4em -1.6em rgba(0, 0, 0, 0.3); overflow: hidden; }
+  .qr { display: block; width: 100%; }
+  .scan { position: absolute; left: 0; right: 0; height: 2px; background: var(--color-signal); box-shadow: 0 0 1em var(--color-signal);
+    top: calc(clamp(0, (var(--p) - 0.35) / 0.2, 1) * 100%); opacity: calc(clamp(0, (var(--p) - 0.34) * 40, 1) - clamp(0, (var(--p) - 0.56) * 40, 1)); }
+  /* celular del visitante: sube desde abajo hasta quedar delante del QR */
+  .visitor { position: absolute; bottom: -10%; width: 34%; aspect-ratio: 9 / 17; border-radius: 1em; border: 0.35em solid #0a0a0a; background: rgba(10, 10, 10, 0.08); backdrop-filter: blur(2px);
+    transform: translateY(calc((1 - clamp(0, var(--p) / 0.32, 1)) * 140%)); opacity: calc(1 - clamp(0, (var(--p) - 0.6) * 6, 1)); }
+  .cam { position: absolute; top: 0.4em; left: 50%; width: 0.5em; height: 0.5em; margin-left: -0.25em; border-radius: 50%; background: #0a0a0a; }
+
+  .wire { position: relative; height: 1px; background: repeating-linear-gradient(90deg, var(--color-faint) 0 6px, transparent 6px 12px); }
+  .sig { position: absolute; top: -0.35em; width: 0.7em; height: 0.7em; margin-left: -0.35em; border-radius: 50%; background: var(--color-signal);
+    left: calc(clamp(0, (var(--p) - 0.56) / 0.18, 1) * 100%); opacity: calc(clamp(0, (var(--p) - 0.55) * 40, 1) - clamp(0, (var(--p) - 0.75) * 40, 1)); }
+
+  .phone { position: relative; width: 52%; aspect-ratio: 9 / 18; border-radius: 1.4em; background: #0a0a0a; display: grid; place-items: center; padding: 0.6em; }
+  .notif { position: absolute; top: 0.8em; left: 0.5em; right: 0.5em; display: flex; flex-direction: column; padding: 0.6em 0.7em; border-radius: 0.8em; background: rgba(255, 255, 255, 0.14); color: #d1d1d6; font-size: 0.55em;
+    opacity: clamp(0, (var(--p) - 0.75) * 10, 1); transform: translateY(calc((1 - clamp(0, (var(--p) - 0.75) * 10, 1)) * -1em)); }
+  .notif b { color: #fff; }
+  .bell { font-size: 1.6em; opacity: clamp(0, (var(--p) - 0.75) * 10, 1); }
+  :global([data-step="8"]) .bell, :global([data-step="9"]) .bell, :global([data-step="10"]) .bell { animation: ring 0.5s ease-in-out infinite; }
+  @keyframes ring { 25% { transform: rotate(-16deg); } 75% { transform: rotate(16deg); } }
+</style>

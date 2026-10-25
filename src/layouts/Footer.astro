@@ -1,16 +1,20 @@
 ---
 // Footer.astro
-import SocialLinks from "../components/SocialLinks.astro";
 import { site } from "../data/portfolio";
 
 const year = new Date().getFullYear();
+const links = [
+  { href: site.github, label: "GitHub" },
+  { href: site.linkedin, label: "LinkedIn" },
+  { href: `mailto:${site.email}`, label: "Email" },
+].filter((l) => l.href);
 ---
 
-<footer class="relative z-[1] border-t border-line">
-  <div class="wrap flex flex-col items-center justify-between gap-6 py-10 sm:flex-row">
-    <p class="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-fg-3">
-      © {year} {site.name} · Hecho con Astro
-    </p>
-    <SocialLinks variant="button" class="gap-2" />
+<footer class="border-t border-rule">
+  <div class="wrap flex flex-col gap-6 py-10 sm:flex-row sm:items-center sm:justify-between">
+    <p class="label">© {year} {site.name}</p>
+    <div class="flex gap-6">
+      {links.map((l) => <a href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" class="text-sm text-mute transition-colors hover:text-ink">{l.label}</a>)}
+    </div>
   </div>
 </footer>

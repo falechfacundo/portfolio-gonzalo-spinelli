@@ -1,0 +1,54 @@
+---
+// Capabilities.astro — banda horizontal: el scroll vertical la desplaza hacia la izquierda.
+// En pantallas chicas es un carrusel nativo con snap.
+import { capabilities } from "../data/portfolio";
+---
+
+<section id="capabilities" data-scrub="pin" data-hscroll data-nav-label="Capacidades" class="caps is-dark relative">
+  <div class="caps-stage">
+    <div class="wrap flex items-end justify-between gap-6 pb-10 pt-28">
+      <h2 class="headline max-w-2xl">Un rango que rara vez<br /><span class="text-mute">vive en una sola persona.</span></h2>
+      <p class="label hidden sm:block">{String(capabilities.length).padStart(2, "0")} disciplinas</p>
+    </div>
+    <div class="caps-track" data-track>
+      {
+        capabilities.map((c) => (
+          <article class="cap">
+            <span class="font-mono text-sm text-signal">{c.k}</span>
+            <h3 class="mt-auto text-[clamp(1.8rem,2.6vw,2.6rem)] font-semibold leading-tight tracking-[-0.03em]">{c.t}</h3>
+            <p class="mt-4 text-mute">{c.d}</p>
+            <div class="mt-6 flex flex-wrap gap-2">{c.tags.map((t) => <span class="tag">{t}</span>)}</div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .caps-track {
+    display: flex;
+    gap: 1rem;
+    padding-inline: var(--gutter);
+    padding-bottom: 4rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .cap {
+    flex: 0 0 min(82vw, 26rem);
+    min-height: 26rem;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: var(--color-soft);
+    scroll-snap-align: start;
+  }
+  /* pantallas grandes: la sección se fija y la banda se mueve con --x (lo calcula motion.ts) */
+  @media (min-width: 48rem) {
+    .caps { height: var(--caps-h, 300vh); }
+    .caps-stage { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+    .caps-track { overflow: visible; transform: translateX(calc(var(--x, 0px) * -1)); will-change: transform; }
+  }
+</style>

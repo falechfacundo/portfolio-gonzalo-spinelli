@@ -1,0 +1,21 @@
+---
+// Manifesto.astro — frase fija en pantalla; las palabras pasan de gris a negro con el scroll
+const statement =
+  "No me detengo en el casi funciona. Diagnostico sobre evidencia real —logs, volcados de memoria, bytes— hasta la causa raíz, y entrego algo que anda de verdad, en manos de gente real.";
+const words = statement.split(" ");
+---
+
+<section data-scrub="pin" data-nav-label="Manifiesto" class="manifesto relative h-[220vh]">
+  <div class="sticky top-0 flex h-[100svh] items-center">
+    <div class="wrap">
+      <p class="label mb-8">Manifiesto</p>
+      <p class="max-w-[68rem] text-[clamp(1.9rem,4.4vw,4.4rem)] font-semibold leading-[1.08] tracking-[-0.035em]" aria-label={statement}>
+        {words.map((w, i) => <span class="w" style={`--i:${i}`} aria-hidden="true">{w} </span>)}
+      </p>
+    </div>
+  </div>
+</section>
+
+<style define:vars={{ n: words.length }}>
+  .w { opacity: calc(0.14 + 0.86 * clamp(0, var(--p, 1) * (var(--n) + 4) - var(--i), 1)); }
+</style>

@@ -1,0 +1,66 @@
+---
+// Cipher.astro — la nota se cifra en el dispositivo, viaja al servidor (que solo ve basura)
+// y se descifra en otro dispositivo
+const note = "Sesión 12 · Paciente refiere mejoría en el sueño.";
+const cipher = "a9f3·e21c·7b0d·91aa·c44e·0f2b·3f9b";
+---
+
+<div class="cf">
+  <div class="node a">
+    <span class="lab">iPhone</span>
+    <div class="card">
+      <span class="plain">{note}</span>
+      <span class="enc">{cipher}</span>
+    </div>
+    <span class="key">🔒 AES-GCM</span>
+  </div>
+
+  <div class="node srv">
+    <span class="lab">Servidor</span>
+    <div class="card dark"><span class="enc on">{cipher}</span></div>
+    <span class="key">Sin clave · zero-knowledge</span>
+  </div>
+
+  <div class="node b">
+    <span class="lab">Mac</span>
+    <div class="card">
+      <span class="enc">{cipher}</span>
+      <span class="plain">{note}</span>
+    </div>
+    <span class="key">🔓 WebAuthn</span>
+  </div>
+
+  <div class="wire"><span class="packet"></span></div>
+</div>
+
+<style>
+  .cf {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    gap: 1.4em;
+    padding: 1.8em;
+    background: var(--color-soft);
+  }
+  .node { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 0.7em; }
+  .lab, .key { font: 0.6em var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-mute); }
+  .card { display: grid; min-height: 6.5em; padding: 1em; border-radius: 0.9em; background: #fff; box-shadow: 0 1.2em 2.4em -1.6em rgba(0, 0, 0, 0.25); font-size: 0.72em; line-height: 1.45; }
+  .card > span { grid-area: 1 / 1; word-break: break-all; }
+  .card.dark { background: #0a0a0a; color: #8e8e93; }
+  .enc { font-family: var(--font-mono); color: var(--color-signal); }
+  .dark .enc { color: #8e8e93; }
+
+  /* dispositivo A: texto plano → cifrado */
+  .a .plain { opacity: calc(1 - clamp(0, (var(--p) - 0.12) * 6, 1)); }
+  .a .enc { opacity: clamp(0, (var(--p) - 0.2) * 6, 1); }
+  /* servidor: se ilumina mientras pasa el paquete */
+  .srv .card { outline: 2px solid rgba(255, 79, 23, calc(1 - clamp(0, abs(var(--p) - 0.5) * 6, 1))); }
+  /* dispositivo B: cifrado → texto plano */
+  .b .enc { opacity: calc(clamp(0, (var(--p) - 0.6) * 8, 1) - clamp(0, (var(--p) - 0.8) * 8, 1)); }
+  .b .plain { opacity: clamp(0, (var(--p) - 0.82) * 8, 1); color: var(--color-ink); }
+
+  .wire { position: absolute; left: 12%; right: 12%; top: 50%; height: 1px; background: repeating-linear-gradient(90deg, var(--color-faint) 0 6px, transparent 6px 12px); }
+  .packet { position: absolute; top: -0.35em; left: calc(clamp(0, (var(--p) - 0.25) / 0.55, 1) * 100%); width: 0.7em; height: 0.7em; margin-left: -0.35em; border-radius: 50%; background: var(--color-signal); box-shadow: 0 0 0 0.35em rgba(255, 79, 23, 0.2); opacity: calc(clamp(0, (var(--p) - 0.22) * 20, 1) - clamp(0, (var(--p) - 0.82) * 20, 1)); }
+</style>

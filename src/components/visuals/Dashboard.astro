@@ -1,0 +1,48 @@
+---
+// Dashboard.astro — KPIs, línea y barras que se dibujan (y se borran) siguiendo el scroll
+const kpis = [
+  { l: "Visitas", v: "12.4k", d: "+18%" },
+  { l: "Conversión", v: "3.2%", d: "+0.4" },
+  { l: "Ingresos", v: "$8.9k", d: "+22%" },
+];
+const pts = [70, 62, 66, 48, 52, 38, 42, 26, 30, 14];
+const line = pts.map((y, i) => `${i === 0 ? "M" : "L"}${(i * 100) / (pts.length - 1)} ${y}`).join(" ");
+const bars = [40, 65, 52, 80, 58, 92, 74];
+---
+
+<div class="db">
+  <div class="kpis">
+    {kpis.map((k, i) => <div class="kpi" style={`--a:${i * 0.06}`}><span>{k.l}</span><b>{k.v}</b><em>{k.d}</em></div>)}
+  </div>
+  <div class="charts">
+    <div class="panel">
+      <span class="lab">Ingresos · 30 días</span>
+      <svg viewBox="0 0 100 80" preserveAspectRatio="none">
+        <path class="area" d={`${line} L100 80 L0 80 Z`} />
+        <path class="stroke" d={line} pathLength="1" />
+      </svg>
+    </div>
+    <div class="panel bars">
+      <span class="lab">Pedidos</span>
+      <div class="cols">{bars.map((h, i) => <span style={`--h:${h}%;--a:${0.35 + i * 0.05}`} />)}</div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .db { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 1em; padding: 1.6em; background: var(--color-soft); }
+  .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8em; }
+  .kpi { display: flex; flex-direction: column; gap: 0.2em; padding: 0.9em 1em; border-radius: 0.8em; background: #fff; font-size: 0.7em; color: var(--color-mute);
+    opacity: clamp(0, (var(--p) - var(--a)) * 8, 1); transform: translateY(calc((1 - clamp(0, (var(--p) - var(--a)) * 8, 1)) * 1em)); }
+  .kpi b { font-size: 1.7em; font-weight: 600; letter-spacing: -0.03em; color: var(--color-ink); }
+  .kpi em { font-style: normal; color: #1f9d55; }
+  .charts { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.6fr 1fr; gap: 0.8em; }
+  .panel { display: flex; flex-direction: column; gap: 0.6em; padding: 1em; border-radius: 0.8em; background: #fff; min-height: 0; }
+  .lab { font: 0.58em var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-mute); }
+  svg { flex: 1; width: 100%; min-height: 0; overflow: visible; }
+  .stroke { fill: none; stroke: var(--color-ink); stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: calc(1 - clamp(0, (var(--p) - 0.15) / 0.55, 1)); }
+  .area { fill: var(--color-signal); opacity: calc(clamp(0, (var(--p) - 0.7) * 5, 1) * 0.12); }
+  .cols { flex: 1; display: flex; align-items: flex-end; gap: 8%; }
+  .cols span { flex: 1; height: var(--h); border-radius: 0.2em 0.2em 0 0; background: var(--color-ink); transform-origin: bottom; transform: scaleY(clamp(0, (var(--p) - var(--a)) * 5, 1)); }
+  .cols span:nth-child(6) { background: var(--color-signal); }
+</style>

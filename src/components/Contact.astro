@@ -1,103 +1,56 @@
 ---
-// Contact.astro
-import SocialLinks from "./SocialLinks.astro";
+// Contact.astro — email gigante como llamado a la acción; el formulario aparece solo con endpoint de Formspree
 import { site } from "../data/portfolio";
 ---
 
-<section id="contact" class="section" data-pause-offscreen>
+<section id="contact" data-nav-label="Contacto" class="py-28 sm:py-40">
   <div class="wrap">
-    <div data-cta class="cta noise relative overflow-hidden rounded-[2.5rem] px-6 py-16 sm:px-14 sm:py-20">
-      <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-        <div class="absolute left-1/2 top-[-30%] h-[60vmin] w-[60vmin] -translate-x-1/2 rounded-full bg-accent/30 blur-[110px]" style="animation:drift 16s ease-in-out infinite"></div>
-      </div>
+    <p class="label" data-reveal>Contacto</p>
+    <h2 class="headline mt-6 max-w-4xl" data-reveal style="--d:.05s">¿Tenés algo que parece imposible?<br /><span class="text-mute">Hablemos.</span></h2>
 
-      <div class="relative grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-        <div class="text-center lg:text-left">
-          <span class="eyebrow" data-reveal>Contacto</span>
-          <h2 class="h-section mt-5" data-reveal>
-            ¿<span class="grad-accent">Hablamos</span>?
-          </h2>
-          <p class="lead mt-6" data-reveal>
-            ¿Tenés una idea que querés llevar a producto? Escribime y respondo rápido.
-          </p>
-          <div class="mt-8 flex flex-wrap items-center justify-center gap-2 lg:justify-start" data-reveal>
-            <a href={`mailto:${site.email}`} class="btn btn-ghost btn-sm" data-magnetic>{site.email}</a>
-            <SocialLinks variant="button" />
-          </div>
-        </div>
+    <a href={`mailto:${site.email}`} class="mail display mt-16 inline-block break-all text-[clamp(1.9rem,6.4vw,6.6rem)]" data-reveal style="--d:.1s">
+      {site.email}
+    </a>
 
-        <div>
-          <div
-            id="successMessage"
-            role="status"
-            class="mb-5 hidden rounded-2xl border border-ok/40 bg-ok/10 p-4 text-center text-sm font-medium text-ok"
-          >
-            ✓ ¡Mensaje enviado! Te contactaré pronto.
+    {
+      site.formspree && (
+        <form id="contactForm" action={site.formspree} method="POST" class="mt-20 grid max-w-3xl gap-8 sm:grid-cols-2" data-reveal>
+          <label class="field-wrap"><span class="label">Nombre</span><input name="name" required class="field" /></label>
+          <label class="field-wrap"><span class="label">Email</span><input type="email" name="email" required class="field" /></label>
+          <label class="field-wrap sm:col-span-2"><span class="label">Mensaje</span><textarea name="message" rows="3" required class="field resize-none" data-lenis-prevent /></label>
+          <div class="flex items-center gap-6 sm:col-span-2">
+            <button type="submit" class="btn">Enviar</button>
+            <p id="formStatus" role="status" class="text-sm text-mute"></p>
           </div>
-          <div
-            id="errorMessage"
-            role="alert"
-            class="mb-5 hidden rounded-2xl border border-red-400/40 bg-red-500/10 p-4 text-center text-sm font-medium text-red-300"
-          >
-            No se pudo enviar el mensaje. Probá de nuevo o escribime a {site.email}.
-          </div>
-          <form id="contactForm" action={site.formspree} method="POST" class="glass space-y-4 rounded-3xl p-5 sm:p-7">
-            <div class="grid gap-4 sm:grid-cols-2">
-              <label class="block">
-                <span class="mb-2 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-3">Nombre</span>
-                <input type="text" id="name" name="name" class="field" placeholder="Tu nombre" required />
-              </label>
-              <label class="block">
-                <span class="mb-2 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-3">Email</span>
-                <input type="email" id="email" name="email" class="field" placeholder="vos@email.com" required />
-              </label>
-            </div>
-            <label class="block">
-              <span class="mb-2 block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-fg-3">Mensaje</span>
-              <textarea data-lenis-prevent id="message" name="message" rows="5" class="field resize-none" placeholder="Contame sobre tu proyecto…" required></textarea>
-            </label>
-            <button type="submit" id="submitBtn" class="btn btn-primary btn-lg w-full disabled:cursor-not-allowed disabled:opacity-60" data-magnetic>
-              Enviar mensaje
-              <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+        </form>
+      )
+    }
   </div>
 </section>
 
 <script>
   const form = document.getElementById("contactForm") as HTMLFormElement | null;
-  const successMessage = document.getElementById("successMessage");
-  const errorMessage = document.getElementById("errorMessage");
-  const submitBtn = document.getElementById("submitBtn") as HTMLButtonElement | null;
-
-  if (form && successMessage && errorMessage && submitBtn) {
-    const label = submitBtn.innerHTML;
-    form.addEventListener("submit", async (e: Event) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Enviando...";
-      successMessage.classList.add("hidden");
-      errorMessage.classList.add("hidden");
-
-      try {
-        const res = await fetch(form.action, {
-          method: "POST",
-          body: new FormData(form),
-          headers: { Accept: "application/json" },
-        });
-        if (!res.ok) throw new Error(`Formspree ${res.status}`);
-        successMessage.classList.remove("hidden");
-        form.reset();
-        setTimeout(() => successMessage.classList.add("hidden"), 5000);
-      } catch {
-        errorMessage.classList.remove("hidden");
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = label;
-      }
-    });
-  }
+  const status = document.getElementById("formStatus");
+  form?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    if (status) status.textContent = "Enviando…";
+    try {
+      const res = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
+      if (!res.ok) throw new Error(String(res.status));
+      form.reset();
+      if (status) status.textContent = "Mensaje enviado. Te respondo pronto.";
+    } catch {
+      if (status) status.textContent = "No se pudo enviar. Escribime por email.";
+    }
+  });
 </script>
+
+<style>
+  .mail { position: relative; padding-bottom: 0.12em; }
+  .mail::after { content: ""; position: absolute; left: 0; bottom: 0; height: 0.06em; width: 100%; background: var(--color-signal); transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease-out-expo) 0.4s; }
+  .mail.in::after, :not(.js-motion) .mail::after { transform: scaleX(1); }
+  .mail:hover::after { transform-origin: right; }
+  .field-wrap { display: flex; flex-direction: column; gap: 0.6rem; }
+  .field { border: 0; border-bottom: 1px solid var(--color-rule); padding: 0.5rem 0; font-size: 1.1rem; background: transparent; outline: none; transition: border-color 0.3s; }
+  .field:focus { border-color: var(--color-ink); }
+</style>
