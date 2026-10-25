@@ -1,0 +1,21 @@
+---
+// ProjectMedia.astro — elige el showcase animado según el variant del proyecto.
+// Cada showcase se anima con CSS mientras su contenedor tiene .is-on (lo pone Projects.astro).
+import type { Project } from "../data/portfolio";
+import Model3D from "./showcases/Model3D.astro";
+import QrDoorbell from "./showcases/QrDoorbell.astro";
+import Clinic from "./showcases/Clinic.astro";
+import Shop from "./showcases/Shop.astro";
+import Dashboard from "./showcases/Dashboard.astro";
+
+interface Props {
+  p: Project;
+}
+const { p } = Astro.props;
+const map = { model3d: Model3D, qr: QrDoorbell, clinic: Clinic, shop: Shop, dashboard: Dashboard };
+const Showcase = map[p.variant];
+---
+
+<div class="showcase relative aspect-[16/10] h-full w-full overflow-hidden rounded-[1.2rem] ring-1 ring-line">
+  <Showcase p={p} />
+</div>

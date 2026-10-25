@@ -1,0 +1,26 @@
+---
+// Marquee.astro — tech ticker
+const items = [
+  "Next.js", "TypeScript", "React", "PostgreSQL", "Prisma", "Supabase",
+  "Tailwind CSS", "Astro", "Zod", "Zustand", "dnd-kit", "Vitest", "Vercel", "Git",
+];
+---
+
+<section data-pause-offscreen class="relative border-y border-line bg-surface/40 py-7" aria-label="Tecnologías">
+  <div class="overflow-hidden [mask-image:linear-gradient(90deg,transparent,#000_12%,#000_88%,transparent)]">
+    <div class="flex w-max gap-3" style="animation:marquee 46s linear infinite">
+      {
+        [0, 1].map(() => (
+          <ul class="flex shrink-0 gap-3">
+            {items.map((t) => (
+              <li class="flex items-center gap-2.5 rounded-full border border-line bg-white/[0.02] px-5 py-2.5 text-[0.9rem] text-fg-2">
+                <span class="h-1.5 w-1.5 rounded-full bg-accent-2" />
+                {t}
+              </li>
+            ))}
+          </ul>
+        ))
+      }
+    </div>
+  </div>
+</section>

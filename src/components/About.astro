@@ -1,0 +1,51 @@
+---
+// About.astro
+const statement =
+  "TODO: Soy vibecoder: uso IA como herramienta principal para pasar de una idea a algo que funciona. Me interesan los proyectos que mezclan software con el mundo real.";
+
+const pillars = [
+  {
+    k: "01",
+    t: "Arquitectura limpia",
+    d: "Código modular, tipado y documentado que el equipo puede mantener y escalar sin miedo.",
+  },
+  {
+    k: "02",
+    t: "Rendimiento real",
+    d: "Bases de datos SQL/NoSQL bien modeladas y frontends rápidos: cada milisegundo cuenta.",
+  },
+  {
+    k: "03",
+    t: "De punta a punta",
+    d: "Trato directo con cada cliente: relevo qué necesita, propongo la solución, la desarrollo y la dejo desplegada.",
+  },
+];
+---
+
+<section id="about" class="section">
+  <div class="wrap">
+    <span class="eyebrow" data-reveal>Sobre mí</span>
+    <p
+      data-words
+      class="mt-6 max-w-[62rem] text-[clamp(1.6rem,3.6vw,3rem)] font-medium leading-[1.18] tracking-[-0.03em] text-white"
+    >
+      {
+        statement.split(" ").map((w) => (
+          <span class="w inline-block whitespace-pre">{w} </span>
+        ))
+      }
+    </p>
+
+    <div class="mt-16 grid gap-4 md:grid-cols-3">
+      {
+        pillars.map((p) => (
+          <article data-reveal class="spot glass rounded-3xl p-7">
+            <span class="font-mono text-xs text-accent-2">{p.k}</span>
+            <h3 class="mt-10 text-xl font-semibold tracking-tight text-white">{p.t}</h3>
+            <p class="mt-3 text-[0.95rem] leading-relaxed text-fg-2">{p.d}</p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>

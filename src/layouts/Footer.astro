@@ -1,0 +1,16 @@
+---
+// Footer.astro
+import SocialLinks from "../components/SocialLinks.astro";
+import { site } from "../data/portfolio";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative z-[1] border-t border-line">
+  <div class="wrap flex flex-col items-center justify-between gap-6 py-10 sm:flex-row">
+    <p class="font-mono text-[0.72rem] uppercase tracking-[0.14em] text-fg-3">
+      © {year} {site.name} · Hecho con Astro
+    </p>
+    <SocialLinks variant="button" class="gap-2" />
+  </div>
+</footer>

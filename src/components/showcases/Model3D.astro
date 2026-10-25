@@ -1,0 +1,115 @@
+---
+// Model3D.astro — modelo .glb girando con <model-viewer>; sin modelo, un cubo wireframe dentro de un anillo rúnico
+import type { Project } from "../../data/portfolio";
+
+interface Props {
+  p: Project;
+}
+const { p } = Astro.props;
+---
+
+<div class="m3d">
+  <div class="fog" aria-hidden="true"></div>
+  <div class="ring" aria-hidden="true">
+    <svg viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="92" />
+      <circle cx="100" cy="100" r="78" stroke-dasharray="2 6" />
+      <path d="M100 8 V192 M30 60 Q100 130 170 60" />
+    </svg>
+  </div>
+  {
+    p.model ? (
+      <model-viewer
+        src={p.model}
+        alt={p.title}
+        auto-rotate
+        auto-rotate-delay="0"
+        rotation-per-second="25deg"
+        camera-controls
+        disable-zoom
+        interaction-prompt="none"
+        shadow-intensity="1"
+        loading="lazy"
+        class="viewer"
+      />
+    ) : (
+      <div class="scene" aria-hidden="true">
+        <div class="cube">
+          {["f", "b", "l", "r", "t", "d"].map((s) => <span class={`face ${s}`} />)}
+        </div>
+      </div>
+    )
+  }
+  <span class="label">{p.model ? "arrastrá para rotar" : "modelo 3D · pendiente"}</span>
+</div>
+
+{p.model && <script is:inline type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>}
+
+<style>
+  .m3d {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: radial-gradient(60% 70% at 50% 60%, #2a2214 0%, #0c0b09 70%);
+    overflow: hidden;
+  }
+  .fog {
+    position: absolute;
+    inset: -20%;
+    background: radial-gradient(40% 30% at 30% 70%, rgba(214, 170, 90, 0.18), transparent 70%),
+      radial-gradient(35% 25% at 70% 40%, rgba(214, 170, 90, 0.12), transparent 70%);
+    animation: fog 14s ease-in-out infinite alternate;
+  }
+  .ring {
+    position: absolute;
+    width: 62%;
+    aspect-ratio: 1;
+    opacity: 0;
+    transform: scale(0.85) rotate(-20deg);
+    transition: opacity 1.2s, transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ring svg { width: 100%; height: 100%; fill: none; stroke: #d6aa5a; stroke-width: 1; opacity: 0.5; }
+  .ring svg { animation: spin 60s linear infinite; }
+  :global(.is-on) .ring { opacity: 1; transform: none; }
+
+  .viewer { width: 100%; height: 100%; --poster-color: transparent; position: relative; }
+
+  .scene { perspective: 700px; position: relative; }
+  .cube {
+    width: 7rem;
+    height: 7rem;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spin3d 12s linear infinite;
+  }
+  .face {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(214, 170, 90, 0.8);
+    background: rgba(214, 170, 90, 0.05);
+    box-shadow: inset 0 0 30px rgba(214, 170, 90, 0.15);
+  }
+  .f { transform: translateZ(3.5rem); }
+  .b { transform: rotateY(180deg) translateZ(3.5rem); }
+  .l { transform: rotateY(-90deg) translateZ(3.5rem); }
+  .r { transform: rotateY(90deg) translateZ(3.5rem); }
+  .t { transform: rotateX(90deg) translateZ(3.5rem); }
+  .d { transform: rotateX(-90deg) translateZ(3.5rem); }
+
+  .label {
+    position: absolute;
+    bottom: 0.9rem;
+    font: 0.68rem/1 var(--font-mono, monospace);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(214, 170, 90, 0.7);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spin3d { from { transform: rotateX(-18deg) rotateY(0); } to { transform: rotateX(-18deg) rotateY(360deg); } }
+  @keyframes fog { to { transform: translate3d(4%, -3%, 0) scale(1.08); } }
+  @media (prefers-reduced-motion: reduce) {
+    .cube, .ring svg, .fog { animation: none; }
+  }
+</style>

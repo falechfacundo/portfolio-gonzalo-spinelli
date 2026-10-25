@@ -1,0 +1,70 @@
+---
+// Hero.astro — sin foto: el nombre es protagonista y una terminal "escribe" el prompt
+import { site } from "../data/portfolio";
+import SocialLinks from "./SocialLinks.astro";
+
+const [first, ...rest] = site.name.split(" ");
+const prompt = 'claude "construí algo que nadie más tenga"';
+---
+
+<section id="home" data-pause-offscreen class="relative overflow-hidden pb-24 pt-[9rem] sm:pt-[11rem]">
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <div class="hairline-grid absolute inset-0 opacity-70 [mask-image:radial-gradient(70%_60%_at_50%_0%,#000_20%,transparent_75%)]"></div>
+    <div class="absolute left-1/2 top-[-18%] h-[70vmin] w-[70vmin] -translate-x-1/2 rounded-full bg-accent/30 blur-[120px]" style="animation:drift 14s ease-in-out infinite"></div>
+    <div class="absolute right-[-10%] top-[8%] h-[40vmin] w-[40vmin] rounded-full bg-fuchsia-500/10 blur-[110px]" style="animation:drift 18s ease-in-out infinite reverse"></div>
+  </div>
+
+  <div class="wrap relative text-center">
+    <span data-hero-in class="eyebrow">{site.role}</span>
+
+    <h1 class="h-display h-hero mt-6" aria-label={site.name}>
+      <span class="split-line" aria-hidden="true"><span class="grad-text">{first}</span></span>
+      <span class="split-line" aria-hidden="true"><span class="grad-accent" style="-webkit-text-fill-color:transparent">{rest.join(" ")}</span></span>
+    </h1>
+
+    <div data-hero-in class="glass mx-auto mt-10 max-w-xl rounded-2xl p-4 text-left font-mono text-[0.85rem] sm:p-5">
+      <div class="mb-3 flex gap-1.5" aria-hidden="true">
+        <span class="h-2.5 w-2.5 rounded-full bg-red-400/70"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-yellow-400/70"></span>
+        <span class="h-2.5 w-2.5 rounded-full bg-green-400/70"></span>
+      </div>
+      <p class="text-fg-2">
+        <span class="text-ok">&gt;</span> <span data-type={prompt} aria-label={prompt}>{prompt}</span><span class="caret">▍</span>
+      </p>
+    </div>
+
+    <p data-hero-in class="lead mx-auto mt-8 max-w-[36rem]">
+      Construyo productos con IA: de mods 3D para videojuegos a sistemas conectados para la casa y
+      webapps para profesionales.
+    </p>
+
+    <div data-hero-in class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+      <a href="#projects" data-magnetic class="btn btn-primary btn-lg">
+        Ver proyectos
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </a>
+      <a href="#contact" data-magnetic class="btn btn-ghost btn-lg">Hablemos</a>
+      <SocialLinks class="sm:ml-2" />
+    </div>
+  </div>
+  <div class="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-base"></div>
+</section>
+
+<script>
+  // escribe el prompt letra por letra; sin JS o con reduced motion queda el texto completo
+  const el = document.querySelector<HTMLElement>("[data-type]");
+  if (el && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const text = el.dataset.type!;
+    el.textContent = "";
+    let i = 0;
+    setTimeout(function tick() {
+      el.textContent = text.slice(0, ++i);
+      if (i < text.length) setTimeout(tick, 35 + Math.random() * 60);
+    }, 1100);
+  }
+</script>
+
+<style>
+  .caret { animation: blink 1s step-end infinite; color: var(--color-accent-2); }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
