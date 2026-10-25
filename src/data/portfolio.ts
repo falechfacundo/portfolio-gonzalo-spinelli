@@ -6,7 +6,7 @@ export const site = {
   email: "spinelliggonzalo@gmail.com",
   github: "https://github.com/ggonzalospineli-ops",
   linkedin: "", // TODO: https://www.linkedin.com/in/...
-  formspree: "", // TODO: https://formspree.io/f/xxxxxxx
+  formspree: "https://formspree.io/f/mqppeavy",
 };
 
 // cada visual es un componente en src/components/visuals/ que se anima con el scroll (--p y data-step)
