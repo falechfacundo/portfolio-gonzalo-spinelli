@@ -10,7 +10,7 @@ const { p } = Astro.props;
 
 <div class="m3d">
   <div class="fog" aria-hidden="true"></div>
-  <div class="ring" aria-hidden="true">
+  <div class="rune" aria-hidden="true">
     <svg viewBox="0 0 200 200">
       <circle cx="100" cy="100" r="92" />
       <circle cx="100" cy="100" r="78" stroke-dasharray="2 6" />
@@ -61,7 +61,7 @@ const { p } = Astro.props;
       radial-gradient(35% 25% at 70% 40%, rgba(214, 170, 90, 0.12), transparent 70%);
     animation: fog 14s ease-in-out infinite alternate;
   }
-  .ring {
+  .rune {
     position: absolute;
     width: 62%;
     aspect-ratio: 1;
@@ -69,9 +69,9 @@ const { p } = Astro.props;
     transform: scale(0.85) rotate(-20deg);
     transition: opacity 1.2s, transform 1.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .ring svg { width: 100%; height: 100%; fill: none; stroke: #d6aa5a; stroke-width: 1; opacity: 0.5; }
-  .ring svg { animation: spin 60s linear infinite; }
-  :global(.is-on) .ring { opacity: 1; transform: none; }
+  .rune svg { width: 100%; height: 100%; fill: none; stroke: #d6aa5a; stroke-width: 1; opacity: 0.5; }
+  .rune svg { animation: spin 60s linear infinite; }
+  :global(.is-on) .rune { opacity: 1; transform: none; }
 
   .viewer { width: 100%; height: 100%; --poster-color: transparent; position: relative; }
 
@@ -110,6 +110,6 @@ const { p } = Astro.props;
   @keyframes spin3d { from { transform: rotateX(-18deg) rotateY(0); } to { transform: rotateX(-18deg) rotateY(360deg); } }
   @keyframes fog { to { transform: translate3d(4%, -3%, 0) scale(1.08); } }
   @media (prefers-reduced-motion: reduce) {
-    .cube, .ring svg, .fog { animation: none; }
+    .cube, .rune svg, .fog { animation: none; }
   }
 </style>
