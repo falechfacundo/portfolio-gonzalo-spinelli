@@ -3,16 +3,26 @@
 // Cada showcase se anima con CSS mientras su contenedor tiene .is-on (lo pone Projects.astro).
 import type { Project } from "../data/portfolio";
 import Model3D from "./showcases/Model3D.astro";
+import Kernel from "./showcases/Kernel.astro";
 import QrDoorbell from "./showcases/QrDoorbell.astro";
 import Clinic from "./showcases/Clinic.astro";
 import Shop from "./showcases/Shop.astro";
 import Dashboard from "./showcases/Dashboard.astro";
+import Recommender from "./showcases/Recommender.astro";
 
 interface Props {
   p: Project;
 }
 const { p } = Astro.props;
-const map = { model3d: Model3D, qr: QrDoorbell, clinic: Clinic, shop: Shop, dashboard: Dashboard };
+const map = {
+  model3d: Model3D,
+  kernel: Kernel,
+  qr: QrDoorbell,
+  clinic: Clinic,
+  shop: Shop,
+  dashboard: Dashboard,
+  recommender: Recommender,
+};
 const Showcase = map[p.variant];
 ---
 

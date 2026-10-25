@@ -55,51 +55,47 @@ import SublimeTextIcon from "./icons/SublimeTextIcon.astro";
 
 import { projects } from "../data/portfolio";
 
-// Bento por área. TODO: ajustar con las herramientas que Gonzalo usa de verdad.
+// Bento por área, según el stack de portafolio.md
 const areas = [
   {
-    title: "IA",
+    title: "Web y producto",
     span: "lg:col-span-4",
     items: [
-      { Icon: ClaudeIcon, label: "Claude Code" },
-      { Icon: ChatGPTIcon, label: "ChatGPT" },
-      { Icon: CursorIcon, label: "Cursor" },
-      { Icon: GithubCopilotIcon, label: "Github Copilot" },
-      { Icon: ModelContextProtocolIcon, label: "MCP" },
-    ],
-  },
-  {
-    title: "Web",
-    span: "lg:col-span-2",
-    items: [
+      { Icon: JavaScriptIcon, label: "JavaScript" },
       { Icon: HTMLIcon, label: "HTML" },
       { Icon: CSSIcon, label: "CSS" },
-      { Icon: JavaScriptIcon, label: "JavaScript" },
-      { Icon: ReactIcon, label: "React" },
-      { Icon: TailwindCSSIcon, label: "Tailwind CSS" },
+      { Icon: CloudflareWorkersIcon, label: "Cloudflare Workers" },
+      { Icon: VercelIcon, label: "Vercel" },
     ],
   },
   {
-    title: "Deploy y datos",
+    title: "Sistemas y datos",
     span: "lg:col-span-2",
     items: [
-      { Icon: VercelIcon, label: "Vercel" },
-      { Icon: SupabaseIcon, label: "Supabase" },
+      { Icon: PythonIcon, label: "Python" },
+      { Icon: BashIcon, label: "Bash" },
       { Icon: GitIcon, label: "Git" },
+    ],
+  },
+  {
+    title: "Herramientas",
+    span: "lg:col-span-2",
+    items: [
       { Icon: GitHubIcon, label: "GitHub" },
+      { Icon: ClaudeIcon, label: "Claude Code" },
     ],
   },
 ];
 
 const others = [
-  { Icon: NextJSIcon, label: "Next.js" },
-  { Icon: TypeScriptIcon, label: "TypeScript" },
-  { Icon: PythonIcon, label: "Python" },
-  { Icon: VSCodeIcon, label: "VS Code" },
-  { Icon: FigmaIcon, label: "Figma" },
-  { Icon: StripeIcon, label: "Stripe" },
-  { Icon: MercadoPagoIcon, label: "Mercado Pago" },
-  { Icon: ChartJSIcon, label: "Chart.js" },
+  { Icon: CloudflareIcon, label: "Cloudflare D1" },
+  { Icon: JsonIcon, label: "WebCrypto" },
+  { Icon: JWTIcon, label: "WebAuthn" },
+  { Icon: UIIcon, label: "PWA" },
+  { Icon: UIIcon, label: "C · kernel Linux" },
+  { Icon: UIIcon, label: "Blender · Soulstruct" },
+  { Icon: UIIcon, label: "PyTorch · Hunyuan3D" },
+  { Icon: GitHubIcon, label: "GitHub Pages" },
 ];
 
 // cruza cada label con los tags de los proyectos: "Next.js 16" → "next.js", "Tailwind CSS" → "tailwind"
@@ -114,7 +110,7 @@ const usage: Record<string, string[]> = Object.fromEntries(
     .flatMap((a) => a.items)
     .map(({ label }) => [label, sources.filter((s) => s.tags.some((t) => norm(t) === norm(label))).map((s) => s.title)]),
 );
-const first = "Claude Code";
+const first = "JavaScript";
 ---
 
 <section id="skills" class="section">

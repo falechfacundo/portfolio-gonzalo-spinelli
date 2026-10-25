@@ -1,15 +1,19 @@
 ---
 // Shop.astro — tres productos que saltan al carrito y el contador sube
-const items = [
-  { n: "Remera", p: "$24", c: "#e4d4c4" },
-  { n: "Buzo", p: "$48", c: "#c9d3dd" },
-  { n: "Gorra", p: "$18", c: "#d9d2e6" },
-];
+import type { Project } from "../../data/portfolio";
+
+interface Props {
+  p: Project;
+}
+const { p } = Astro.props;
+const colors = ["#e4d4c4", "#c9d3dd", "#d9d2e6"];
+const prices = ["$24.900", "$18.500", "$9.900"];
+const items = (p.items ?? ["Producto", "Producto", "Producto"]).slice(0, 3).map((n, i) => ({ n, p: prices[i], c: colors[i] }));
 ---
 
 <div class="sh">
   <div class="bar">
-    <strong>KHORVEN</strong>
+    <strong>{p.title.toUpperCase()}</strong>
     <div class="cart">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1" /><circle cx="17" cy="20" r="1" /></svg>
       <span class="badge"><span class="digits">0<br />1<br />2<br />3</span></span>

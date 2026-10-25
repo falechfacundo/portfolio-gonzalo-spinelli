@@ -4,7 +4,7 @@ import { site } from "../data/portfolio";
 import SocialLinks from "./SocialLinks.astro";
 
 const [first, ...rest] = site.name.split(" ");
-const prompt = 'claude "construí algo que nadie más tenga"';
+const prompt = "make && ./ship --a-produccion";
 ---
 
 <section id="home" data-pause-offscreen class="relative overflow-hidden pb-24 pt-[9rem] sm:pt-[11rem]">
@@ -34,8 +34,8 @@ const prompt = 'claude "construí algo que nadie más tenga"';
     </div>
 
     <p data-hero-in class="lead mx-auto mt-8 max-w-[36rem]">
-      Construyo productos con IA: de mods 3D para videojuegos a sistemas conectados para la casa y
-      webapps para profesionales.
+      Construyo productos de principio a fin: del kernel de Linux a la criptografía en producción,
+      pasando por IA generativa 3D que corro en mi propio hardware.
     </p>
 
     <div data-hero-in class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
