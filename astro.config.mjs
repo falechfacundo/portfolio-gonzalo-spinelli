@@ -4,10 +4,11 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
+// allowedHosts en Astro y en Vite: hacen falta los dos para entrar por túneles (Cloudflare, etc.)
 export default defineConfig({
-  // permite entrar por túneles (Cloudflare, etc.) además de localhost
   server: { allowedHosts: true },
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    server: { allowedHosts: true },
   }
 });
